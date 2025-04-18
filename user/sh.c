@@ -55,6 +55,24 @@ struct cmd *parsecmd(char*);
 void runcmd(struct cmd*) __attribute__((noreturn));
 
 // Execute cmd.  Never returns.
+
+
+void print_blue_os(char *message) {
+  char *pos = message;
+  while (*pos) {
+    if (*pos == 'o' && *(pos + 1) == 's') {
+      write(1, "\033[34m", 5); // Set text color to blue
+      write(1, "os", 2);
+      write(1, "\033[0m", 4);  // Reset text color
+      pos += 2;
+    } else {
+      write(1, pos, 1);
+      pos++;
+    }
+  }
+}
+
+
 void
 runcmd(struct cmd *cmd)
 {
@@ -76,6 +94,27 @@ runcmd(struct cmd *cmd)
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit(1);
+
+    // === Custom handling for "!" command ===
+    if(strcmp(ecmd->argv[0], "!") == 0){
+      if(ecmd->argv[1] == 0){
+        fprintf(2, "No message provided\n");
+        exit(1);
+      }
+
+      int len = strlen(ecmd->argv[1]);
+      if(len > 512){
+        printf("Message too long\n");
+        exit(0);
+      }
+
+      // پیام را چاپ کن بدون < >
+      print_blue_os(ecmd->argv[1]);
+      printf("\n");
+      exit(0);
+    }
+    // ======================================
+
     exec(ecmd->argv[0], ecmd->argv);
     fprintf(2, "exec %s failed\n", ecmd->argv[0]);
     break;
