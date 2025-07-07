@@ -17,6 +17,10 @@ struct context {
   uint64 s10;
   uint64 s11;
 };
+struct thread* initthread(struct proc *p);
+int thread_schd(struct proc *p);
+void freethread(struct thread *t);
+int thread_schd(struct proc *);
 
 // Per-CPU state.
 struct cpu {

@@ -82,6 +82,12 @@ void            panic(char*) __attribute__((noreturn));
 void            printfinit(void);
 
 // proc.c
+struct          thread;
+void            exitthread(void);
+void            freethread(struct thread *);
+struct          thread *allocthread(uint64 start, uint64 stack, uint64 arg);
+int             jointhread(uint id);
+void            sleepthread(int n, uint ticks0);
 int             cpuid(void);
 void            exit(int);
 int             fork(void);
