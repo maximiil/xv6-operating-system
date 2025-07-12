@@ -186,6 +186,10 @@ freeproc(struct proc *p)
   p->killed = 0;
   p->xstate = 0;
   p->state = UNUSED;
+  p->current_thread = 0; 
+  for (int i = 0; i < NTHREAD; ++i) {
+      freethread(&p->threads[i]);}
+
 }
 
 // Create a user page table for a given process, with no user memory,
@@ -479,16 +483,17 @@ scheduler(void)
         // to release its lock and then reacquire it
         // before jumping back to us.
         if (thread_schd(p)) {
-          p->state = RUNNING;
-          c->proc = p;
-          swtch(&c->context, &p->context);
 
-          // Process is done running for now.
-          // It should have changed its p->state before coming back.
-          c->proc = 0;
-          found = 1;
-        }
-      }
+            p->state = RUNNING;
+            c->proc = p;
+            swtch(&c->context, &p->context);
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+           c->proc = 0;
+           found = 1;
+      }}
+
       release(&p->lock);
     }
     if(found == 0) {
@@ -712,6 +717,7 @@ procdump(void)
     printf("\n");
   }
 }
+
 struct thread* allocthread(uint64 start_thread, uint64 stack_address, uint64 arg) {
     struct proc *p = myproc();
     if (!initthread(p))  
@@ -890,5 +896,6 @@ void sleepthread(int n, uint ticks0) {
     t->state = THREAD_SLEEPING;
     thread_schd(myproc());
 }
+
 
 
