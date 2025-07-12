@@ -20,7 +20,7 @@ struct context {
 struct thread* initthread(struct proc *p);
 int thread_schd(struct proc *p);
 void freethread(struct thread *t);
-int thread_schd(struct proc *);
+
 
 // Per-CPU state.
 struct cpu {
