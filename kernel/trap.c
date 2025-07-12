@@ -50,28 +50,36 @@ usertrap(void)
   // save user program counter.
   p->trapframe->epc = r_sepc();
   
-  if(r_scause() == 8){
+    if (r_scause() == 8) {
     // system call
 
-    if(killed(p))
+    if (killed(p))
       exit(-1);
 
-    // sepc points to the ecall instruction,
-    // but we want to return to the next instruction.
     p->trapframe->epc += 4;
 
-    // an interrupt will change sepc, scause, and sstatus,
-    // so enable only now that we're done with those registers.
     intr_on();
 
     syscall();
-  } else if((which_dev = devintr()) != 0){
-    // ok
+  } else if ((which_dev = devintr()) != 0){
+    // interrupt handled
+  } else if (p->current_thread && p->current_thread->id != p->pid) {
+    // خطای غیرمنتظره در یک ترد (نه کل فرآیند) → فقط همین ترد را بکش
+    if (r_sepc() != r_stval() || r_scause() != 0xc) {
+      printf("usertrap(): thread unexpected scause 0x%lx pid=%d tid=%d\n",
+             r_scause(), p->pid, p->current_thread->id);
+      printf("            sepc=0x%lx stval=0x%lx\n", r_sepc(), r_stval());
+    }
+    exitthread();  // فقط ترد را از بین ببر
+    return;
   } else {
-    printf("usertrap(): unexpected scause 0x%lx pid=%d\n", r_scause(), p->pid);
+    // خطای غیرمنتظره در خود فرآیند → کل فرآیند را بکش
+    printf("usertrap(): unexpected scause 0x%lx pid=%d\n",
+           r_scause(), p->pid);
     printf("            sepc=0x%lx stval=0x%lx\n", r_sepc(), r_stval());
     setkilled(p);
   }
+
 
   if(killed(p))
     exit(-1);
