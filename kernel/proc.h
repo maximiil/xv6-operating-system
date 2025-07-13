@@ -19,6 +19,15 @@ struct context {
 };
 struct proc;  
 struct thread; 
+
+struct thread* initthread(struct proc *p);
+int thread_schd(struct proc *p);
+void freethread(struct thread *t);
+
+
+
+
+
 // Per-CPU state.
 struct cpu {
   struct proc *proc;          // The process running on this cpu, or null.
