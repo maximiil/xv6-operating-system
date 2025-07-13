@@ -2,7 +2,8 @@
 struct context {
   uint64 ra;
   uint64 sp;
-
+struct proc;  
+struct thread; 
   // callee-saved
   uint64 s0;
   uint64 s1;
