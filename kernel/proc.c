@@ -734,8 +734,8 @@ struct thread* allocthread(uint64 start_thread, uint64 stack_address, uint64 arg
             *t->trapframe = *p->trapframe;
             t->trapframe->sp = stack_address;
             t->trapframe->a0 = arg;
-            t->trapframe->ra = (uint64)-1;
-            t->trapframe->epc = start_thread;
+            t->trapframe->ra = -1; 
+            t->trapframe->epc = (uint64) start_thread;
             return t;
         }
     }
@@ -886,8 +886,8 @@ int jointhread(uint join_id) {
 
     t->join = join_id;
     t->state = THREAD_JOINED;
-    yield();  // دادن فرصت اجرا به سایر تردها
-    return 0;
+    yield();
+    return 0;  
 }
 void sleepthread(int n, uint ticks0) {
     struct thread *t = myproc()->current_thread;
