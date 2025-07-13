@@ -2,7 +2,8 @@
 struct context {
   uint64 ra;
   uint64 sp;
-
+struct proc;  
+struct thread; 
   // callee-saved
   uint64 s0;
   uint64 s1;
@@ -80,8 +81,7 @@ struct trapframe {
 };
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
-struct proc;  
-struct thread; 
+
 enum threadstate {
   THREAD_UNUSED,
   THREAD_RUNNABLE,
