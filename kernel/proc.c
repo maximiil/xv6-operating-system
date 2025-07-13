@@ -887,7 +887,6 @@ int jointhread(uint join_id) {
     t->join = join_id;
     t->state = THREAD_JOINED;
     yield();  // دادن فرصت اجرا به سایر تردها
-    return 0;
 }
 void sleepthread(int n, uint ticks0) {
     struct thread *t = myproc()->current_thread;

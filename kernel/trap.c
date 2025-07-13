@@ -71,7 +71,6 @@ usertrap(void)
       printf("            sepc=0x%lx stval=0x%lx\n", r_sepc(), r_stval());
     }
     exitthread();  // فقط ترد را از بین ببر
-    return;
   } else {
     // خطای غیرمنتظره در خود فرآیند → کل فرآیند را بکش
     printf("usertrap(): unexpected scause 0x%lx pid=%d\n",
