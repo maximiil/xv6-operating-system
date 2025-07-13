@@ -17,21 +17,7 @@ struct spinlock pid_lock;
 
 extern void forkret(void);
 
-static void
-freeproc(struct proc *p)
-{
-  // ...
-  p->killed = 0;
-  p->xstate = 0;
-  p->state = UNUSED;
-
-  p->current_thread = 0; // مقداردهی مجدد
-
-  // آزادسازی تمام تردهای مرتبط با فرایند
-  for (int i = 0; i < NTHREAD; ++i) {
-    freethread(&p->threads[i]);
-  }
-}
+static void freeproc(struct proc *p) ;
 
 extern char trampoline[]; // trampoline.S
 
