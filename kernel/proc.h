@@ -2,8 +2,7 @@
 struct context {
   uint64 ra;
   uint64 sp;
-struct proc;  
-struct thread; 
+
   // callee-saved
   uint64 s0;
   uint64 s1;
@@ -18,7 +17,8 @@ struct thread;
   uint64 s10;
   uint64 s11;
 };
-
+struct proc;  
+struct thread; 
 // Per-CPU state.
 struct cpu {
   struct proc *proc;          // The process running on this cpu, or null.
